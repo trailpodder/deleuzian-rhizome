@@ -1,86 +1,152 @@
-/* Layout and font baseline */
+/* General reset and font */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #181c24;
+  background-color: #181c24;
   color: #e2eafc;
 }
 
 header {
   width: 100%;
-  background: #151820cd;
-  text-align: center;
+  background-color: #151820cc;
   padding: 1.4rem 0 0.8rem 0;
+  text-align: center;
   border-bottom: 1px solid #262b38;
-  box-shadow: 0 2px 6px rgba(20,30,50,0.12);
+  box-shadow: 0 2px 6px rgba(20, 30, 50, 0.12);
 }
 
 header h1 {
-  font-weight: 600;
   font-size: 2.1rem;
+  font-weight: 600;
   margin-bottom: 0.8rem;
 }
+
 header p {
   font-size: 1.1rem;
   color: #b2bbd3;
+  margin: 0 auto 12px;
 }
 
+/* UI controls container styling */
 #ui-controls {
   position: absolute;
-  left: 24px;
   top: 110px;
-  z-index: 15;
-  background: #181c24d0;
-  border-radius: 11px;
+  left: 24px;
+  z-index: 10;
+  background-color: #181c24d0;
+  border-radius: 12px;
   box-shadow: 0 2px 12px #191d26a0;
   padding: 18px 26px 16px 18px;
   pointer-events: auto;
+  max-width: 240px;
+  user-select: none;
 }
 
 #ui-controls p {
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
   font-size: 1rem;
   font-weight: 500;
+  color: #a5b0cc;
 }
 
-input[type=range] {
-  width: 200px;
-  margin-bottom: 16px;
-}
-input[type=range]::-webkit-slider-thumb {
-  background: #84d9f0;
-}
-
-main {
-  width: 100vw;
-  height: 100vh;
-  min-height: 600px;
-  margin: 0;
-  position: relative;
-  overflow: hidden;
+/* Style sliders */
+input[type="range"] {
+  width: 100%;
+  margin-bottom: 20px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  background: transparent;
 }
 
-/* p5 Canvas layout tweak: fill available area, lower z-index than UI */
-canvas {
-  position: absolute !important;
-  left: 0; top: 0;
-  z-index: 1;
-  display: block;
+input[type="range"]:focus {
   outline: none;
 }
 
+/* Webkit slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  background: #4a90e2;
+  border-radius: 4px;
+}
+
+/* Webkit slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #84d9f0;
+  margin-top: -6px;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(132, 217, 240, 0.8);
+  transition: background 0.3s ease;
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+  background: #5ab9db;
+}
+
+/* Firefox styles */
+input[type="range"]::-moz-range-track {
+  height: 8px;
+  background: #4a90e2;
+  border-radius: 4px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  border: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #84d9f0;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(132, 217, 240, 0.8);
+  transition: background 0.3s ease;
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+  background: #5ab9db;
+}
+
+/* Main canvas fills viewport */
+main {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* p5 canvas fills main area */
+canvas {
+  display: block !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  outline: none;
+  user-select: none;
+  z-index: 1;
+}
+
+/* Footer styling */
 footer {
   width: 100%;
   text-align: center;
   padding: 12px 0;
-  background: #151820cc;
+  background-color: #151820cc;
   color: #b2bbd3;
   font-size: 0.94rem;
   position: fixed;
-  left: 0; bottom: 0;
+  left: 0;
+  bottom: 0;
   letter-spacing: 0.03em;
   box-shadow: 0 -2px 8px #181c2455;
   z-index: 99;
+  user-select: none;
 }
