@@ -1,67 +1,86 @@
-/* Reset some defaults */
-* {
+/* Layout and font baseline */
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-/* Full viewport canvas background */
-body, html {
-  height: 100%;
-  width: 100%;
-  background-color: #1e1e1e;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #ddd;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  user-select: none;
-  overflow: hidden;
+  background: #181c24;
+  color: #e2eafc;
 }
 
 header {
-  padding: 1rem;
-  text-align: center;
-  background-color: #111;
   width: 100%;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+  background: #151820cd;
+  text-align: center;
+  padding: 1.4rem 0 0.8rem 0;
+  border-bottom: 1px solid #262b38;
+  box-shadow: 0 2px 6px rgba(20,30,50,0.12);
 }
 
 header h1 {
-  font-weight: 700;
-  font-size: 1.8rem;
-  margin-bottom: 0.3rem;
+  font-weight: 600;
+  font-size: 2.1rem;
+  margin-bottom: 0.8rem;
+}
+header p {
+  font-size: 1.1rem;
+  color: #b2bbd3;
 }
 
-header p {
+#ui-controls {
+  position: absolute;
+  left: 24px;
+  top: 110px;
+  z-index: 15;
+  background: #181c24d0;
+  border-radius: 11px;
+  box-shadow: 0 2px 12px #191d26a0;
+  padding: 18px 26px 16px 18px;
+  pointer-events: auto;
+}
+
+#ui-controls p {
+  margin: 0 0 12px 0;
   font-size: 1rem;
-  opacity: 0.7;
+  font-weight: 500;
+}
+
+input[type=range] {
+  width: 200px;
+  margin-bottom: 16px;
+}
+input[type=range]::-webkit-slider-thumb {
+  background: #84d9f0;
 }
 
 main {
-  flex-grow: 1;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  min-height: 600px;
+  margin: 0;
   position: relative;
+  overflow: hidden;
 }
 
-/* The p5.js canvas is automatically appended; ensure it fills the main section */
+/* p5 Canvas layout tweak: fill available area, lower z-index than UI */
 canvas {
+  position: absolute !important;
+  left: 0; top: 0;
+  z-index: 1;
   display: block;
-  width: 100% !important;
-  height: 100% !important;
+  outline: none;
 }
 
-/* Footer styling */
 footer {
-  padding: 0.5rem 1rem;
-  text-align: center;
-  font-size: 0.8rem;
-  opacity: 0.6;
-  background-color: #111;
   width: 100%;
-  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
-  user-select: none;
+  text-align: center;
+  padding: 12px 0;
+  background: #151820cc;
+  color: #b2bbd3;
+  font-size: 0.94rem;
+  position: fixed;
+  left: 0; bottom: 0;
+  letter-spacing: 0.03em;
+  box-shadow: 0 -2px 8px #181c2455;
+  z-index: 99;
 }
