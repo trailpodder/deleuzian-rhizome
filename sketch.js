@@ -14,6 +14,7 @@ function setup() {
   // Create UI sliders
   createP('Movement Speed');
   movementSpeedSlider = createSlider(0.1, 5, 1, 0.1);
+  movementSpeedSlider.parent('ui-controls');
   movementSpeedSlider.style('width', '200px');
 
   createP('Node Size');
