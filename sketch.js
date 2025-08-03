@@ -1,20 +1,35 @@
+// Deleuzian 3D Rhizome with Shape Variations, Color Cycling, and UI Controls
+
 let nodes = [];
-let noiseOffsets = []; // For smooth Perlin noise movement on x,y,z
+let noiseOffsets = [];
+let movementSpeedSlider, nodeSizeSlider;
+let movementSpeed = 1;
+let nodeSize = 8;
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   colorMode(HSB, 360, 100, 100, 100);
   background(220, 20, 20);
 
-  // Initialize nodes with 3D positions and colors
+  // Create UI sliders
+  createP('Movement Speed');
+  movementSpeedSlider = createSlider(0.1, 5, 1, 0.1);
+  movementSpeedSlider.style('width', '200px');
+
+  createP('Node Size');
+  nodeSizeSlider = createSlider(3, 20, 8, 1);
+  nodeSizeSlider.style('width', '200px');
+
+  // Initialize nodes
   for (let i = 0; i < 40; i++) {
     nodes.push({
       pos: createVector(
-        random(-width/2, width/2), 
-        random(-height/2, height/2), 
+        random(-width/2, width/2),
+        random(-height/2, height/2),
         random(-300, 300)
       ),
-      colorHue: random(140, 220),
+      baseHue: random(140, 220),
+      shapeType: floor(random(4)), // 0:sphere, 1:box, 2:torus, 3:cone
       connections: []
     });
     noiseOffsets.push({
@@ -24,7 +39,7 @@ function setup() {
     });
   }
 
-  // Randomly connect nodes (non-hierarchical)
+  // Randomly connect nodes
   nodes.forEach((node, i) => {
     let numConnections = int(random(2, 7));
     for (let j = 0; j < numConnections; j++) {
@@ -38,90 +53,103 @@ function setup() {
 
 function draw() {
   background(220, 20, 20, 15);
-
-  // Enable orbit control for interactive rotation
   orbitControl();
 
-  // Use a fixed amplitude value for smooth movement and visuals
-  const amplitude = 0.1;
+  // Update controls
+  movementSpeed = movementSpeedSlider.value();
+  nodeSize = nodeSizeSlider.value();
 
-  // Draw connections with blended colors; brightness fixed as no sound
   strokeWeight(1.5);
+
+  // Time for color cycling
+  let t = frameCount * 0.5;
+
+  // Draw connections
   nodes.forEach((node, i) => {
     node.connections.forEach(conn => {
-      let hueBlend = lerp(node.colorHue, nodes[conn].colorHue, 0.5);
-      stroke(hueBlend, 80, 80, 80);
-
+      let color1 = color((node.baseHue + t) % 360, 80, 80, 80);
+      let color2 = color((nodes[conn].baseHue + t) % 360, 80, 80, 80);
+      let blended = lerpColor(color1, color2, 0.5);
+      stroke(blended);
       let p1 = node.pos;
       let p2 = nodes[conn].pos;
       line(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
     });
   });
 
-  // Smooth Perlin noise movement in 3D per node
+  // Perlin noise smooth movement
   nodes.forEach((node, i) => {
-    let t = frameCount * 0.005;
-
-    let noiseX = noise(noiseOffsets[i].x + t);
-    let noiseY = noise(noiseOffsets[i].y + t);
-    let noiseZ = noise(noiseOffsets[i].z + t);
-
-    const amplitudeRange = map(amplitude, 0, 0.3, 1, 10, true);
-
-    node.pos.x += map(noiseX, 0, 1, -amplitudeRange, amplitudeRange);
-    node.pos.y += map(noiseY, 0, 1, -amplitudeRange, amplitudeRange);
-    node.pos.z += map(noiseZ, 0, 1, -amplitudeRange, amplitudeRange);
-
-    // Optional constraint inside a box volume
+    let nt = frameCount * 0.005 * movementSpeed;
+    let noiseX = noise(noiseOffsets[i].x + nt);
+    let noiseY = noise(noiseOffsets[i].y + nt);
+    let noiseZ = noise(noiseOffsets[i].z + nt);
+    let range = map(movementSpeed, 0.1, 5, 1, 20);
+    node.pos.x += map(noiseX, 0, 1, -range, range);
+    node.pos.y += map(noiseY, 0, 1, -range, range);
+    node.pos.z += map(noiseZ, 0, 1, -range, range);
     node.pos.x = constrain(node.pos.x, -width/2, width/2);
     node.pos.y = constrain(node.pos.y, -height/2, height/2);
     node.pos.z = constrain(node.pos.z, -300, 300);
   });
 
-  // Draw nodes as spheres with fixed brightness
+  // Draw nodes with shape and color cycling
   noStroke();
   nodes.forEach(node => {
-    fill(node.colorHue, 90, 80, 100);
+    let hueCycle = (node.baseHue + t) % 360;
+    fill(hueCycle, 90, 80, 100);
     push();
     translate(node.pos.x, node.pos.y, node.pos.z);
-    sphere(8, 8, 8);
+    switch(node.shapeType) {
+      case 0: // sphere
+        sphere(nodeSize);
+        break;
+      case 1: // box
+        box(nodeSize * 1.2);
+        break;
+      case 2: // torus
+        torus(nodeSize * 0.7, nodeSize * 0.2);
+        break;
+      case 3: // cone
+        cone(nodeSize, nodeSize * 1.5);
+        break;
+    }
     pop();
   });
 }
 
-// Add new node where user clicks, mapping from 2D screen coords to WEBGL XY plane at Z=0
+// Mouse interaction to add new node
 function mousePressed() {
-  // Convert mouseX/Y from screen coords to p5 WEBGL relative coords
-  let mouse3D = screenToWebGL(mouseX, mouseY);
+  if (mouseY > 100) { // ignore clicks on UI area
+    let mouse3D = screenToWebGL(mouseX, mouseY);
+    let newIdx = nodes.length;
+    let newNode = {
+      pos: createVector(mouse3D.x, mouse3D.y, random(-300, 300)),
+      baseHue: random(140, 220),
+      shapeType: floor(random(4)),
+      connections: []
+    };
+    nodes.push(newNode);
+    noiseOffsets.push({
+      x: random(1000),
+      y: random(2000),
+      z: random(3000)
+    });
 
-  let newIdx = nodes.length;
-  let newNode = {
-    pos: createVector(mouse3D.x, mouse3D.y, random(-300, 300)),
-    colorHue: random(140, 220),
-    connections: []
-  };
-
-  nodes.push(newNode);
-  noiseOffsets.push({
-    x: random(1000),
-    y: random(2000),
-    z: random(3000)
-  });
-
-  // Connect new node randomly to existing nodes
-  let connectCount = int(random(2, 6));
-  for (let i = 0; i < connectCount; i++) {
-    let target = int(random(nodes.length));
-    if (target !== newIdx && !newNode.connections.includes(target)) {
-      newNode.connections.push(target);
-    }
-    if (target !== newIdx && !nodes[target].connections.includes(newIdx)) {
-      nodes[target].connections.push(newIdx);
+    // Connect new node randomly
+    let connectCount = int(random(2, 6));
+    for (let i = 0; i < connectCount; i++) {
+      let target = int(random(nodes.length));
+      if (target !== newIdx && !newNode.connections.includes(target)) {
+        newNode.connections.push(target);
+      }
+      if (target !== newIdx && !nodes[target].connections.includes(newIdx)) {
+        nodes[target].connections.push(newIdx);
+      }
     }
   }
 }
 
-// Helper to convert 2D screen coords to WEBGL relative coords in XY plane at Z=0
+// Convert screen 2D coords to WebGL relative coords in XY plane Z=0
 function screenToWebGL(sx, sy) {
   return {
     x: sx - width / 2,
