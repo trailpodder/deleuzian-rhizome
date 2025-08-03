@@ -1,0 +1,67 @@
+/* Reset some defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Full viewport canvas background */
+body, html {
+  height: 100%;
+  width: 100%;
+  background-color: #1e1e1e;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+  overflow: hidden;
+}
+
+header {
+  padding: 1rem;
+  text-align: center;
+  background-color: #111;
+  width: 100%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+}
+
+header h1 {
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+header p {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+main {
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* The p5.js canvas is automatically appended; ensure it fills the main section */
+canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Footer styling */
+footer {
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  background-color: #111;
+  width: 100%;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
+  user-select: none;
+}
