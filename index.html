@@ -3,25 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Deleuzian Rhizome Digital Artwork</title>
+  <title>Deleuzian Rhizome 3D Digital Artwork</title>
+  <!-- p5.js core library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Deleuzian Rhizome Digital Artwork</h1>
-    <p>Click anywhere on the canvas to add new nodes.</p>
+    <h1>Deleuzian Rhizome 3D Digital Artwork</h1>
+    <p>
+      Click and drag inside the 3D scene to explore.<br>
+      Adjust sliders to control node size and movement.<br>
+      Click in the canvas area to add new nodes!
+    </p>
   </header>
+  <div id="ui-controls">
+    <!-- Sliders will be dynamically appended here by p5.js -->
+  </div>
   <main>
-    <!-- The p5.js sketch will create and attach a canvas here -->
+    <!-- The p5.js canvas will be attached here -->
   </main>
   <footer>
     <small>
-      Inspired by Gilles Deleuze and Félix Guattari’s rhizome philosophy &mdash;
-      created by trailpodder
+      Inspired by Deleuze & Guattari • Created by trailpodder
     </small>
   </footer>
-
   <script src="sketch.js"></script>
 </body>
 </html>
